@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessibility Starting Points — CITL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F7F7F5;
+    --surface: #FFFFFF;
+    --blue: #185FA5;
+    --blue-hover: #0C447C;
+    --navy: #14315A;
+    --ink: #1A1A1A;
+    --ink-soft: #45505E;
+    --border: #DADFE3;
+
+    --success: #1B7A43;
+    --success-ink: #0E5C31;
+    --success-tint: #E9F5EC;
+
+    --amber-ink: #7A4700;
+    --amber-tint: #FBF1E1;
+
+    --error-tint: #FBEAEA;
+
+    --radius: 10px;
+    --focus-ring: 3px solid #0C447C;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.55;
+  }
+
+  .visually-hidden{
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  .skip-link{
+    position: absolute; left: -9999px; top: 0;
+    background: var(--navy); color: #fff;
+    padding: 12px 20px; z-index: 100; border-radius: 0 0 8px 0;
+    font-weight: 600; text-decoration: none;
+  }
+  .skip-link:focus{ left: 0; }
+
+  a{ color: var(--blue); }
+  a:hover{ color: var(--blue-hover); }
+  :focus-visible{ outline: var(--focus-ring); outline-offset: 2px; }
+
+  header.site-header{
+    background: var(--navy);
+    color: #fff;
+    padding: 40px 20px 36px;
+  }
+  .header-inner{ max-width: 780px; margin: 0 auto; }
+  .eyebrow{
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #B9CBE0;
+    margin: 0 0 12px;
+  }
+  h1{
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3.6vw, 2.3rem);
+    margin: 0 0 12px;
+    line-height: 1.25;
+  }
+  .header-sub{
+    font-size: 1.02rem;
+    color: #E4EAF1;
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  main{ max-width: 780px; margin: 0 auto; padding: 0 20px 80px; }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .reframe h2{ font-size: 1.02rem; margin: 0 0 10px; color: var(--navy); }
+  .reframe-lead{ font-size: 0.97rem; color: var(--ink); margin: 0 0 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .reframe p{ margin: 0 0 12px; color: var(--ink-soft); font-size: 0.97rem; }
+  .reframe p:last-child{ margin-bottom: 0; }
+
+  section{ margin-top: 44px; }
+  h2.section-title{ font-size: 1.25rem; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
+  .section-hint{ color: var(--ink-soft); margin: 0 0 18px; font-size: 0.95rem; }
+
+  fieldset{ border: none; margin: 0; padding: 0; }
+  legend{ padding: 0; margin: 0 0 14px; font-weight: 600; }
+
+  .type-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+  }
+  .type-option{
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+  .type-option:hover{ border-color: var(--blue); }
+  .type-option input[type="checkbox"]{
+    width: 18px; height: 18px; accent-color: var(--blue); flex-shrink: 0;
+  }
+  .type-option .type-label{ font-weight: 600; font-size: 0.96rem; }
+
+  .continue-row{ margin-top: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .select-warning{
+    font-size: 0.9rem; color: var(--amber-ink); display: none;
+  }
+  .select-warning.is-visible{ display: inline; }
+
+  button.btn{
+    font-family: inherit; font-weight: 600; font-size: 0.92rem;
+    padding: 10px 18px; border-radius: 8px;
+    border: 1px solid var(--blue); background: var(--blue); color: #fff; cursor: pointer;
+  }
+  button.btn:hover{ background: var(--blue-hover); border-color: var(--blue-hover); }
+  button.btn.btn-secondary{ background: transparent; color: var(--blue); }
+  button.btn.btn-secondary:hover{ background: #EAF1F8; }
+  button.btn.btn-text{
+    background: none; border: none; color: var(--blue);
+    font-weight: 600; padding: 6px 0; text-decoration: underline;
+  }
+  button.btn.btn-text:hover{ color: var(--blue-hover); }
+
+  #step-focus{ display: none; }
+  #step-focus.is-visible{ display: block; }
+  #step-select.is-hidden{ display: none; }
+
+  .focus-header{
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+  }
+
+  .tabs{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .tab-btn{
+    font-family: inherit; font-size: 0.9rem; font-weight: 600;
+    padding: 9px 16px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--ink-soft); cursor: pointer;
+  }
+  .tab-btn[aria-selected="true"]{
+    background: var(--navy); border-color: var(--navy); color: #fff;
+  }
+  .tab-btn:hover:not([aria-selected="true"]){ border-color: var(--blue); color: var(--blue); }
+
+  .panel{ display: none; }
+  .panel.is-active{ display: block; }
+
+  .module-intro{ color: var(--ink-soft); margin: 0 0 6px; font-size: 0.96rem; }
+  .go-deeper{ color: var(--ink-soft); font-size: 0.87rem; margin: 0 0 20px; font-style: italic; }
+
+  details.item{
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+  }
+  details.item[open] summary{ border-bottom: 1px solid var(--border); }
+
+  summary.item-summary{
+    list-style: none; cursor: pointer; padding: 15px 18px;
+    display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.98rem;
+  }
+  summary.item-summary::-webkit-details-marker{ display: none; }
+
+  .chevron{ flex-shrink: 0; transition: transform 0.15s ease; }
+  details.item[open] .chevron{ transform: rotate(90deg); }
+
+  .tier-badge{
+    flex-shrink: 0; font-size: 0.72rem; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px; white-space: nowrap; margin-left: auto;
+  }
+  .tier-do{ background: var(--success-tint); color: var(--success-ink); }
+  .tier-not{ background: #E8F0F8; color: var(--blue-hover); }
+  .tier-ask{ background: var(--amber-tint); color: var(--amber-ink); }
+
+  .item-body{ padding: 2px 18px 20px; }
+  .item-body h4{
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-soft); margin: 15px 0 6px;
+  }
+  .item-body h4:first-child{ margin-top: 2px; }
+  .item-body p, .item-body ul{ margin: 0 0 4px; font-size: 0.94rem; color: var(--ink); }
+  .item-body ul{ padding-left: 20px; }
+  .item-body li{ margin-bottom: 4px; }
+
+  .side-note{
+    background: var(--bg); border-left: 3px solid var(--ink-soft);
+    padding: 10px 14px; margin-top: 14px; font-size: 0.89rem; border-radius: 0 6px 6px 0;
+  }
+  .side-note strong{ color: var(--navy); }
+  .wku-note{ border-left-color: var(--blue); }
+  .wku-note strong{ color: var(--navy); }
+
+  .log-check{
+    display: flex; align-items: center; gap: 10px; margin-top: 15px;
+    padding-top: 13px; border-top: 1px solid var(--border); font-size: 0.9rem;
+  }
+  .log-check input[type="checkbox"]{ width: 18px; height: 18px; accent-color: var(--success); flex-shrink: 0; }
+
+  .log-section{
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px; margin-top: 40px;
+  }
+  .log-framing{ color: var(--ink-soft); font-size: 0.93rem; margin: 0 0 16px; }
+  .log-context-row{ margin-bottom: 16px; }
+  .log-context-row label{ display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; }
+  .log-context-row input{
+    width: 100%; max-width: 420px; padding: 9px 12px;
+    border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.94rem;
+  }
+  .log-context-row input:focus-visible{ outline: var(--focus-ring); }
+
+  .log-list-heading{ font-weight: 700; font-size: 0.88rem; color: var(--navy); margin: 0 0 4px; }
+  #log-list{ list-style: none; padding: 0; margin: 4px 0 16px; }
+  #log-list li{
+    padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.93rem;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  #log-list li:last-child{ border-bottom: none; }
+  .log-empty{ color: var(--ink-soft); font-size: 0.92rem; font-style: italic; }
+  .log-time{ color: var(--ink-soft); font-size: 0.84rem; white-space: nowrap; }
+
+  .log-actions{ display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .copy-confirm{ font-size: 0.87rem; color: var(--success-ink); font-weight: 600; min-height: 1.2em; }
+  .log-output-wrap{ display: none; margin-top: 14px; }
+  .log-output-wrap.is-visible{ display: block; }
+  .log-output-label{ display: block; font-size: 0.86rem; color: var(--ink-soft); margin-bottom: 6px; }
+  #log-output{
+    width: 100%; font-family: inherit; font-size: 0.88rem; color: var(--ink);
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; resize: vertical;
+  }
+  #log-output:focus-visible{ outline: var(--focus-ring); }
+  .doc-disclaimer{
+    font-size: 0.86rem; color: var(--ink-soft); margin-top: 15px;
+    padding-top: 13px; border-top: 1px solid var(--border);
+  }
+
+  footer{ max-width: 780px; margin: 0 auto; padding: 28px 20px 60px; color: var(--ink-soft); font-size: 0.87rem; }
+  footer a{ font-weight: 600; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <p class="eyebrow">CITL &middot; Resource Guide</p>
+    <h1>Accessibility Starting Points</h1>
+    <p class="header-sub">A reference for reviewing your own course materials, organized by what you actually use. Select your content types and work through one at a time.</p>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <div class="card reframe">
+    <h2>A note on Blackboard Ally and other accessibility checkers</h2>
+    <p><a href="https://www.wku.edu/citl/resources/blackboardally.php" target="_blank" rel="noopener">Blackboard Ally</a> is the accessibility tool built into Blackboard. It scans your course materials automatically, assigns each file an accessibility score, and compiles those scores into a Course Accessibility Report for the course as a whole. The accessibility characteristics it is checking for help far more students than the ones with a formal accommodation on file: clear headings, useful alt text, and accurate captions make materials easier to follow for almost anyone, whether they're on a phone, in a loud room, or trying to search a document for one specific term.</p>
+    <p>Ally's accessibility score is most useful when viewed like feedback on a rough draft, not a grade on a final paper &mdash; it's pointing you toward specific things worth a look, not scoring the course, or you.</p>
+    <p>Ally, and the accessibility checkers built into Word and PowerPoint, are all automated tools. They're genuinely good at catching things that follow a clear, consistent rule: a missing label, a contrast ratio below a set number, a table with no header row. They can't tell you whether an alt text description is actually useful, whether a caption is accurate, or whether a reading order makes sense to someone listening rather than looking. That's true of any automated accessibility tool, not a shortcoming specific to one. A flagged item means "here's something worth a look," not "something is broken."</p>
+  </div>
+
+  <section id="step-select" aria-labelledby="picker-heading">
+    <h2 class="section-title" id="picker-heading">What's in your course?</h2>
+    <p class="section-hint">Check everything that applies, then continue. You'll see one content type at a time, with an easy way to switch or come back here.</p>
+
+    <fieldset>
+      <legend class="visually-hidden">Select the content types used in your course</legend>
+      <div class="type-grid" id="type-grid"></div>
+    </fieldset>
+
+    <div class="continue-row">
+      <button class="btn" id="continue-btn" type="button">Continue</button>
+      <span class="select-warning" id="select-warning" role="status">Pick at least one content type first.</span>
+    </div>
+  </section>
+
+  <section id="step-focus" aria-labelledby="focus-heading">
+    <div class="focus-header">
+      <h2 class="section-title" id="focus-heading" style="margin:0;">Your starting points</h2>
+      <button class="btn btn-text" id="edit-types-btn" type="button">Edit my content types</button>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Content type" id="tablist"></div>
+    <div id="panels-container"></div>
+
+    <div class="log-section" aria-labelledby="log-heading">
+      <h2 class="section-title" id="log-heading" style="margin-bottom:10px;">Your review log</h2>
+      <p class="log-framing">This works best in the moment &mdash; check items off as you actually address them in a real file, not from memory afterward. If you're working through several files of the same type, you don't need a separate entry for each one; one entry can represent a whole work session. Copy the result into your own longer-term documentation whenever it's useful.</p>
+
+      <div class="log-context-row">
+        <label for="log-context">What are you working on right now? (optional)</label>
+        <input type="text" id="log-context" placeholder="e.g., BIOL 220 — Week 3 slides">
+      </div>
+
+      <p class="log-list-heading" id="log-list-heading">Addressed so far:</p>
+      <ul id="log-list" aria-labelledby="log-list-heading">
+        <li class="log-empty">Nothing addressed yet — check an item above to add it here.</li>
+      </ul>
+      <div class="log-actions">
+        <button class="btn" id="copy-log-btn" type="button">Copy log as text</button>
+        <span class="copy-confirm" id="copy-confirm" role="status" aria-live="polite"></span>
+      </div>
+      <div class="log-output-wrap" id="log-output-wrap">
+        <label for="log-output" class="log-output-label">Your log text — select all (Ctrl/Cmd+A) and copy (Ctrl/Cmd+C) if the button above didn't copy it automatically:</label>
+        <textarea id="log-output" readonly rows="6"></textarea>
+      </div>
+      <p class="doc-disclaimer">This log supports showing good-faith effort on your own materials. It isn't a substitute for whatever documentation process the Office of Institutional Equity puts in place.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Questions, or something here that doesn't fit your situation? Reach CITL at <a href="mailto:citl@wku.edu">citl@wku.edu</a>. This tool doesn't determine whether a course meets compliance requirements on its own &mdash; it's meant to make the day-to-day technical work more manageable.</p>
+</footer>
+
+<script>
+(function(){
+
+  var CATEGORIES = [
+    {
+      id: "ppt",
+      label: "PowerPoint / Slides",
+      intro: "Six things worth checking in a typical deck, roughly in order of how often they come up.",
+      goDeeper: "For step-by-step instructions, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Images and graphics without alt text",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader announces alt text in place of an image. With none, a student using one gets nothing at exactly the point a sighted student is looking at a diagram or photo.",
+          checks: [
+            "Ally and PowerPoint's built-in checker (Review &gt; Check Accessibility) both flag an image with no alt text at all.",
+            "Neither can tell whether the alt text you wrote is actually useful. \u201CPicture of a graph\u201D satisfies the check and tells a student nothing."
+          ],
+          action: "Write one or two sentences describing what the image communicates, not just what it depicts. For a chart, describe the trend or takeaway, not \u201Ca bar chart.\u201D Purely decorative images (a divider line, a background texture) can be marked decorative instead, so the checker stops flagging them and a screen reader skips past them."
+        },
+        {
+          title: "Reading order",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader reads slide content in the order objects were added to the slide, not the order they appear visually. A title added last, or a text box dragged into place, can get read before or after content it doesn't belong with.",
+          checks: [
+            "PowerPoint's built-in checker (Review &gt; Check Accessibility) flags reading order problems directly.",
+            "It doesn't know what the correct order should be for your specific slide. That's a judgment call only you can make."
+          ],
+          action: "Open the Selection Pane (Home &gt; Arrange &gt; Selection Pane) and reorder objects to match how a listener should encounter them. Quick on a simple slide. On a slide with many layered objects, it takes longer the first time and gets faster once you've done it a few times."
+        },
+        {
+          title: "Missing or generic slide titles",
+          tier: "do", tierLabel: "Core fix",
+          why: "Screen reader users often move through a deck slide-by-slide by title, the way a sighted person scans a table of contents. \u201CSlide 12\u201D gives them nothing to navigate by.",
+          checks: ["Both Ally and PowerPoint's checker catch missing or duplicate titles &mdash; this is one of the more clear-cut checks in this whole list."],
+          action: "Give every slide a real, unique title. If it doesn't fit your visual design, shrink or reposition the title placeholder rather than deleting it. It can exist without dominating the slide."
+        },
+        {
+          title: "Color contrast, and meaning carried by color alone",
+          tier: "do", tierLabel: "Core fix",
+          why: "Low-contrast text is hard to read with low vision. Information shown only through color &mdash; red text for \u201Cincorrect,\u201D a red-versus-green icon with no label &mdash; disappears for colorblind students and for anyone using the deck printed in black and white.",
+          checks: [
+            "A contrast ratio is a fixed math calculation of the color values involved, not a judgment call. When this is flagged, it's accurate.",
+            "Color used as the only way to convey meaning is different: no automated tool checks for that. That one needs your own eyes."
+          ],
+          action: "Fix flagged contrast issues first. Separately, scan for anything relying on color alone and add a label, icon, or pattern alongside it."
+        },
+        {
+          title: "Tables: real data vs. layout",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "A real data table needs a marked header row so a screen reader can announce \u201Ccolumn: Fall enrollment\u201D for each cell. A table used only to line up text visually turns into a screen reader navigating cell-by-cell through content that was never tabular.",
+          checks: [
+            "Both Ally and PowerPoint's checker flag a table missing header formatting.",
+            "Neither can tell you whether something should be a table at all. Only a look at the content answers that."
+          ],
+          action: "For real data, mark the header row (Table Design &gt; Header Row) &mdash; a quick fix. If a \u201Ctable\u201D is actually laying out unrelated text, that's worth a short conversation about restructuring rather than a five-minute patch."
+        },
+        {
+          title: "Embedded or linked video and audio",
+          tier: "do", tierLabel: "Core fix",
+          why: "Captions matter for students who are deaf or hard of hearing, and help anyone watching without headphones or in a noisy space.",
+          checks: ["Neither Ally nor PowerPoint's checker verifies caption accuracy, only whether captions exist. PowerPoint's checker often won't even see a video that's linked rather than embedded."],
+          action: "Review captions rather than assuming they're correct once they exist.",
+          wku: "If the clip is a Mediasite recording, WKU's captioning vendor generates captions automatically &mdash; check them for accuracy rather than assuming. Zoom and YouTube auto-caption too, but auto-captions are a first draft: review and correct names, jargon, and specialized terms before trusting them."
+        }
+      ]
+    },
+    {
+      id: "word",
+      label: "Word documents",
+      intro: "Five things worth checking in a typical Word document.",
+      goDeeper: "For step-by-step instructions on Word documents, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Headings applied as real styles, not just bold text",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader user navigates a long document by heading, the way anyone else might scan a table of contents. Text that's only bolded or enlarged to look like a heading doesn't register as one, so there's nothing to jump to.",
+          checks: ["Word's built-in checker and Ally both detect whether real heading styles are applied &mdash; not whether text merely looks like a heading."],
+          action: "Apply Heading 1, 2, or 3 from the Styles gallery on the Home tab, rather than manually bolding and resizing text."
+        },
+        {
+          title: "Images without alt text",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader announces alt text in place of an image. With none, a student using one gets nothing at exactly the point a sighted reader is looking at a picture or graphic. (This is the same underlying issue anywhere an image appears — slides, Blackboard pages, PDFs — not just in Word.)",
+          checks: ["Word's checker and Ally can both confirm whether alt text is present at all. Neither judges whether the description you wrote is actually useful."],
+          action: "Right-click the image, choose Edit Alt Text, and describe what it communicates in context."
+        },
+        {
+          title: "Lists created with the List tools, not typed manually",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader announces \u201Clist, 4 items\u201D only when a real list structure exists. Lines that start with a typed dash or number look like a list visually but read as disconnected sentences.",
+          checks: ["This one is inconsistent to catch by machine. A typed list sometimes passes an automated scan even though it isn't a real list, so it's worth a personal look regardless of what the score says."],
+          action: "Use the Bullets or Numbering buttons on the Home tab instead of typing dashes, asterisks, or numbers by hand."
+        },
+        {
+          title: "Tables: real data vs. layout",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "A real data table needs a marked header row so a screen reader can announce which column a cell belongs to. A table used only to line up unrelated text visually turns into a screen reader navigating cell-by-cell through content that was never tabular.",
+          checks: ["Word's checker and Ally can both confirm whether a header row is marked. Neither can tell you whether a table should exist as a table at all — only a look at the content answers that."],
+          action: "Mark the header row through Table Design for real data &mdash; quick. If a table is really just visual layout, that's worth a short conversation about restructuring with plain text or columns instead."
+        },
+        {
+          title: "Link text that describes the destination",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "Screen reader users often pull up a list of every link in a document, out of context. Several links that all say \u201Cclick here\u201D become indistinguishable from each other on that list.",
+          checks: ["This is a judgment call, not something either checker verifies well &mdash; a link labeled \u201Cclick here\u201D isn't reliably flagged."],
+          action: "Rewrite link text to name what it leads to &mdash; \u201Cthe course syllabus\u201D rather than \u201Cclick here.\u201D If a document has many links to review, that's a reasonable thing to bring to a CITL session rather than redo alone in one sitting."
+        }
+      ]
+    },
+    {
+      id: "pdf",
+      label: "PDFs & scanned documents",
+      intro: "Four things worth checking, and one honest limit on what you're expected to personally fix.",
+      goDeeper: "For step-by-step instructions on PDFs and scanned documents, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Scanned pages with no OCR",
+          tier: "do", tierLabel: "Core fix",
+          why: "A scanned page is an image of text, not text itself. A screen reader gets nothing, and the page can't be searched by keyword either.",
+          checks: ["Ally detects when a PDF has no underlying text layer at all. It doesn't verify how accurate the recognized text is once OCR runs."],
+          action: "Run the Ally File Transformer (in the Assist tab within Blackboard) on your own materials to add a text layer. For journal articles or other third-party readings, check whether the library has an accessible version to link to instead of scanning your own copy."
+        },
+        {
+          title: "Exporting from Word or PowerPoint without the right settings",
+          tier: "do", tierLabel: "Core fix",
+          why: "Saving an already-accessible Word or PowerPoint file as a PDF doesn't automatically carry that work over. Headings, alt text, and reading order can be silently lost in a plain \u201CSave As PDF.\u201D",
+          checks: ["Ally will flag the resulting PDF as if the accessibility work was never done, because in the file itself, it wasn't."],
+          action: "Use the export option built for this (in Word: File &gt; Export &gt; Create PDF/XPS, with the accessibility-preserving option selected, not a general print-to-PDF)."
+        },
+        {
+          title: "Underlying tagged structure",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "The tags that carry heading, list, and table structure inside a finished PDF sometimes need direct repair, particularly in complex or older documents.",
+          checks: ["Ally's score reflects tagging problems whether or not they're realistic for you to fix. Manually repairing PDF tags requires Adobe Acrobat Pro, which most faculty don't have."],
+          action: "No action expected here on your own. If a specific document matters a lot and keeps coming up, that's worth flagging to CITL rather than trying to solve it with tools you don't have."
+        },
+        {
+          title: "Reading order in complex layouts",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "Multi-column journal articles, forms, and dense reports can have a reading order that doesn't match how the page looks, and these are usually files you didn't create.",
+          checks: ["Ally can flag disordered reading in a PDF. It can't tell you what the correct order should be, and fixing it in someone else's published document isn't reasonable to expect."],
+          action: "Where possible, link to a library database version instead of your own scanned copy, or request an alternative format through Ally rather than repairing the file by hand."
+        }
+      ]
+    },
+    {
+      id: "img",
+      label: "Images & graphics",
+      intro: "For standalone images, banners, or diagrams uploaded on their own \u2014 not images already covered inside a Word file or slide deck.",
+      goDeeper: "For step-by-step instructions on images and graphics, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Meaningful alt text",
+          tier: "do", tierLabel: "Core fix",
+          why: "Alt text stands in for the image entirely for a screen reader user. A literal description of appearance often misses the point the image was included to make.",
+          checks: ["Most tools, including Ally, catch whether alt text exists at all. None can judge whether it captures the right meaning."],
+          action: "Describe what the image communicates in context, not just what's pictured."
+        },
+        {
+          title: "Decorative images marked as decorative",
+          tier: "do", tierLabel: "Core fix",
+          why: "A background texture or divider line adds nothing when announced aloud \u2014 it just adds noise a screen reader user has to sit through.",
+          checks: ["Word, PowerPoint, and Blackboard's own content editor all let you mark an image as decorative directly, separate from writing alt text."],
+          action: "Mark purely visual, non-informational images as decorative so a screen reader skips them."
+        },
+        {
+          title: "Complex images: infographics, dense charts, multi-part diagrams",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "A single sentence of alt text can't carry everything in a data-dense infographic or a diagram with many labeled parts.",
+          checks: ["No automated tool distinguishes a simple image from a complex one \u2014 it treats both the same way, which is exactly why this one is easy to under-serve without noticing."],
+          action: "For anything genuinely dense, a short alt text plus a longer text description placed near the image usually works better than trying to fit everything into alt text alone. Worth talking through with CITL if you're not sure how much detail is enough."
+        },
+        {
+          title: "Meaning carried by color alone",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "A color-coded diagram with no legend or labels \u2014 red versus green, say \u2014 is invisible to colorblind students and to anyone using a screen reader.",
+          checks: ["No automated tool checks for this. It's not a flag you'll ever see on a score."],
+          action: "When you notice it, add a label, pattern, or icon alongside the color. Not something to comb every image for on a deadline, but worth keeping in mind for anything you build going forward."
+        }
+      ]
+    },
+    {
+      id: "video",
+      label: "Video & audio",
+      intro: "For standalone recordings \u2014 a Mediasite lecture, a podcast-style audio file, or a linked video that isn't inside a slide deck.",
+      goDeeper: "For step-by-step instructions on captioning and transcripts, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Caption accuracy",
+          tier: "do", tierLabel: "Core fix",
+          why: "Captions matter for students who are deaf or hard of hearing, and they help anyone watching without headphones or in a noisy space.",
+          checks: ["Ally and most platforms confirm whether captions exist. None of them confirm whether the captions are correct."],
+          action: "Review captions rather than assuming they're accurate once they're present.",
+          wku: "WKU's Mediasite captioning vendor generates captions automatically \u2014 check them, don't assume. Zoom and YouTube auto-caption too, and both need the same review, especially for names, jargon, and specialized terms."
+        },
+        {
+          title: "Transcripts for audio-only content",
+          tier: "do", tierLabel: "Core fix",
+          why: "A podcast-style recording or audio note has no captions to sync, so a plain text transcript is often the most direct way to make it accessible.",
+          checks: ["Nothing automated checks whether a transcript exists for an audio file the way it checks for captions on video \u2014 this one is easy to overlook entirely."],
+          action: "If you already have a script or detailed notes, that's usually enough to adapt into a transcript quickly. Starting from scratch is a reasonable thing to bring to CITL rather than transcribe by hand."
+        },
+        {
+          title: "Describing on-screen action out loud",
+          tier: "do", tierLabel: "Core fix",
+          why: "In a demonstration or screen recording, a student who can't see the screen needs to hear what's happening, not just what's being said about it.",
+          checks: ["This isn't something any checker evaluates \u2014 it depends entirely on what you say while recording."],
+          action: "Narrate what you're clicking, pointing to, or showing as you go. For something already recorded without this, a short written description alongside the video link is a reasonable stand-in."
+        }
+      ]
+    },
+    {
+      id: "bbdoc",
+      label: "Blackboard documents",
+      intro: "For content built directly in Blackboard Ultra's content editor \u2014 announcements, content pages, anything typed straight into Blackboard rather than uploaded as a file.",
+      goDeeper: "For more on how Ally evaluates Blackboard content, see CITL's <a href=\"https://www.wku.edu/citl/resources/blackboardally.php\" target=\"_blank\" rel=\"noopener\">Blackboard Ally</a> page.",
+      items: [
+        {
+          title: "Real heading styles in the content editor",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader user navigates a long page by heading, the way anyone else might scan a table of contents. Text that's only made bigger or bold doesn't register as a heading, so there's nothing to jump to.",
+          checks: ["Ally checks content built in the Blackboard editor for real heading structure, not visual size — the same underlying check it runs on an uploaded document."],
+          action: "Use the Heading options in the editor's formatting toolbar instead of manually resizing or bolding text."
+        },
+        {
+          title: "Alt text on images uploaded directly into a content item",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader announces alt text in place of an image. With none, a student using one gets nothing where a sighted reader sees a picture or graphic.",
+          checks: ["The editor prompts for alt text when you upload an image. It's easy to skip that prompt without noticing."],
+          action: "Take the extra few seconds to fill in the alt text prompt rather than clicking past it."
+        },
+        {
+          title: "Math typed directly into a content item",
+          tier: "do", tierLabel: "Core fix",
+          why: "Math typed as plain symbols, or pasted in as an image, isn't read correctly by a screen reader \u2014 an expression can come out as a string of disconnected words and numbers.",
+          checks: ["Neither Ally nor a general scan can tell whether math on a page is readable structure or just symbols that happen to look right visually."],
+          action: "Use the built-in Math Editor in the content editor's toolbar (the \u03A3 icon) instead of typing symbols or pasting an image. It's already there \u2014 worth knowing it exists."
+        },
+        {
+          title: "Link text that describes the destination",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "Screen reader users often pull up a list of every link on a page, out of context. Several links that all say \u201Cclick here\u201D become indistinguishable from each other on that list.",
+          checks: ["Whether link text describes its destination is a judgment call. It's not something an automated checker verifies reliably, so it's worth a personal scan regardless of what a score shows."],
+          action: "Name the destination in the link text. If a page has many links built up over several semesters, that's a reasonable thing to review with CITL rather than all at once."
+        },
+        {
+          title: "Pasted-in HTML or code",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "Code pasted in from an old course, a template, or an outside tool can carry low-contrast styling or structure that doesn't match the rest of the page, without it being obvious just by looking.",
+          checks: ["This is one of the harder things for any automated tool to evaluate in context \u2014 worth a second set of eyes."],
+          action: "If you're reusing pasted code from somewhere else, it's worth a quick CITL check rather than assuming it carried over cleanly."
+        }
+      ]
+    },
+    {
+      id: "quiz",
+      label: "Quizzes & assessments",
+      intro: "This section is about tests and quizzes built directly in Blackboard Ultra, not third-party publisher quizzes \u2014 those are covered under Links & external resources.",
+      goDeeper: "For more on Ally and Blackboard Ultra accessibility features, see CITL's <a href=\"https://www.wku.edu/citl/resources/blackboardally.php\" target=\"_blank\" rel=\"noopener\">Blackboard Ally</a> page.",
+      items: [
+        {
+          title: "Equations and math in question text",
+          tier: "do", tierLabel: "Core fix",
+          why: "Math typed as plain symbols, or pasted in as an image, isn't read correctly by a screen reader — an expression can come out as a string of disconnected words and numbers instead of a coherent equation.",
+          checks: ["Neither Ally nor a general scan verifies whether math in a question is genuinely readable structure."],
+          action: "Use the built-in Math Editor in the question text field rather than typing symbols or pasting an image."
+        },
+        {
+          title: "Images that carry the answer",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "A question like \u201Cidentify the labeled structure\u201D depends on visually reading fine detail in an image. Alt text describing the image can accidentally give away the answer, or still not give an equivalent experience if it doesn't.",
+          checks: ["A checker will confirm alt text exists. It has no way to tell you whether that alt text still makes the question fair to answer."],
+          action: "This one is less about a technical fix and more about a design conversation \u2014 whether the question needs a different format for a student using a screen reader. Worth bringing to CITL as a genuine design question, not a compliance gap."
+        },
+        {
+          title: "Tables in question stems or answer choices",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "A real data table needs a marked header row so a screen reader can make sense of it cell by cell, rather than reading an unlabeled grid of numbers or words.",
+          checks: ["A checker can flag a missing header row. It can't tell you whether a table is the right format for the content."],
+          action: "Mark header rows where the table is genuine data. If restructuring a table used for answer layout, that's worth a short conversation."
+        },
+        {
+          title: "Fill-in-the-blank questions",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader reads a blank space as a string of \u201Cblank blank blank,\u201D which is confusing without warning.",
+          checks: ["This isn't something a checker flags \u2014 it's a wording choice in your instructions, not a structural issue."],
+          action: "Say in the question instructions that it's a fill-in-the-blank question, so the format makes sense before a student hits the blank itself."
+        },
+        {
+          title: "Matching, ordering, or drag-based question types",
+          tier: "ask", tierLabel: "Worth a CITL conversation",
+          why: "Not every interaction pattern behaves the same way for a student navigating by keyboard instead of a mouse.",
+          checks: ["Blackboard states that its own drag-and-drop interactions across the platform include keyboard alternatives. Whether that holds true for a specific question you've built is worth confirming yourself rather than assuming."],
+          action: "Try completing the question using only Tab, Enter, and arrow keys \u2014 no mouse. If anything feels stuck or unclear, that's worth a CITL conversation before the test goes live."
+        },
+        {
+          title: "Timed tests",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "A student with an approved accommodation may need extended time on a timed assessment.",
+          checks: ["Not something Ally or any content checker evaluates \u2014 this is handled through WKU's existing accommodation process, not a file-level fix."],
+          action: "Handled through the Student Accessibility Resource Center's existing accommodation and exception process in Blackboard Ultra, not something to solve inside this tool."
+        }
+      ]
+    },
+    {
+      id: "links",
+      label: "Links & external resources",
+      intro: "For linked readings, third-party platforms, and tools embedded inside your course.",
+      goDeeper: "For more on reviewing linked content, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
+      items: [
+        {
+          title: "Link text that describes the destination",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader user often pulls up every link on a page as a standalone list, out of context. Several links labeled \u201Cclick here\u201D or \u201Cread more\u201D become indistinguishable.",
+          checks: ["Whether link text describes its destination is a judgment call. It isn't something an automated checker verifies reliably \u2014 use your own read of the page rather than a clean score as the signal here."],
+          action: "Name the destination in the link text \u2014 \u201Cthe course syllabus\u201D rather than \u201Cclick here.\u201D"
+        },
+        {
+          title: "Third-party tools and publisher platforms",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "A tool's accessibility depends on how the vendor built it \u2014 nothing about how you use it inside Blackboard changes that.",
+          checks: ["No file-level checker evaluates an external tool at all. This lives outside what Ally or Word's checker can see."],
+          action: "This isn't something to personally fix after the fact. Where possible, it's worth checking a tool's accessibility documentation before adopting it, rather than after a student runs into a barrier."
+        },
+        {
+          title: "Your own scanned reading vs. a library-hosted version",
+          tier: "do", tierLabel: "Core fix",
+          why: "A library database version of an article is usually already accessible and stays stable across course copies, while your own scan may not be either.",
+          checks: ["Ally will still flag your own uploaded scan even if a clean, accessible library version exists elsewhere."],
+          action: "Check whether the library already has the reading before uploading your own copy."
+        }
+      ]
+    }
+  ];
+
+  // ---- build the picker ----
+  var grid = document.getElementById('type-grid');
+  CATEGORIES.forEach(function(cat){
+    var wrapper = document.createElement('label');
+    wrapper.className = 'type-option';
+    wrapper.innerHTML =
+      '<input type="checkbox" value="' + cat.id + '">' +
+      '<span class="type-label">' + cat.label + '</span>';
+    grid.appendChild(wrapper);
+  });
+
+  // ---- build all panels up front (hidden until selected) ----
+  var panelsContainer = document.getElementById('panels-container');
+
+  function renderTierBadge(tier, label){
+    var cls = tier === 'do' ? 'tier-do' : (tier === 'ask' ? 'tier-ask' : 'tier-not');
+    return '<span class="tier-badge ' + cls + '">' + label + '</span>';
+  }
+
+  CATEGORIES.forEach(function(cat, catIdx){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = 'panel-' + cat.id;
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', 'tab-' + cat.id);
+    panel.setAttribute('tabindex', '0');
+
+    var html = '<p class="module-intro">' + cat.intro + '</p>' +
+                '<p class="go-deeper">' + cat.goDeeper + '</p>';
+
+    cat.items.forEach(function(item, idx){
+      var checksHTML = item.checks.map(function(c){ return '<li>' + c + '</li>'; }).join('');
+      var wkuHTML = item.wku ? '<div class="side-note wku-note"><strong>At WKU:</strong> ' + item.wku + '</div>' : '';
+      var logKey = cat.id + '-' + idx;
+
+      html +=
+        '<details class="item" id="item-' + logKey + '">' +
+          '<summary class="item-summary">' +
+            '<svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="#45505E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+            '<span>' + item.title + '</span>' +
+            renderTierBadge(item.tier, item.tierLabel) +
+          '</summary>' +
+          '<div class="item-body">' +
+            '<h4>Why it matters</h4><p>' + item.why + '</p>' +
+            '<h4>What the checkers tell you</h4><ul>' + checksHTML + '</ul>' +
+            '<h4>What to do</h4><p>' + item.action + '</p>' +
+            wkuHTML +
+            '<div class="log-check">' +
+              '<input type="checkbox" id="log-' + logKey + '" data-log-label="' + cat.label.replace(/"/g, '&quot;') + ': ' + item.title.replace(/"/g, '&quot;') + '">' +
+              '<label for="log-' + logKey + '">I\'ve reviewed or addressed this in my own materials</label>' +
+            '</div>' +
+          '</div>' +
+        '</details>';
+    });
+
+    panel.innerHTML = html;
+    panelsContainer.appendChild(panel);
+  });
+
+  // ---- two-step navigation ----
+  var stepSelect = document.getElementById('step-select');
+  var stepFocus = document.getElementById('step-focus');
+  var tablist = document.getElementById('tablist');
+  var continueBtn = document.getElementById('continue-btn');
+  var editTypesBtn = document.getElementById('edit-types-btn');
+  var selectWarning = document.getElementById('select-warning');
+
+  function getSelectedIds(){
+    return Array.prototype.slice.call(document.querySelectorAll('#type-grid input[type="checkbox"]:checked'))
+      .map(function(cb){ return cb.value; });
+  }
+
+  function activateTab(id){
+    document.querySelectorAll('.tab-btn').forEach(function(btn){
+      var isActive = btn.dataset.id === id;
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      btn.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+    document.querySelectorAll('.panel').forEach(function(p){
+      p.classList.toggle('is-active', p.id === 'panel-' + id);
+    });
+  }
+
+  function buildTabs(selectedIds){
+    tablist.innerHTML = '';
+    selectedIds.forEach(function(id, idx){
+      var cat = CATEGORIES.find(function(c){ return c.id === id; });
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tab-btn';
+      btn.textContent = cat.label;
+      btn.dataset.id = id;
+      btn.id = 'tab-' + id;
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-controls', 'panel-' + id);
+      btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+      btn.setAttribute('tabindex', idx === 0 ? '0' : '-1');
+      btn.addEventListener('click', function(){ activateTab(id); });
+      tablist.appendChild(btn);
+    });
+    if (selectedIds.length){ activateTab(selectedIds[0]); }
+  }
+
+  tablist.addEventListener('keydown', function(e){
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll('.tab-btn'));
+    var currentIndex = tabs.findIndex(function(t){ return t.getAttribute('aria-selected') === 'true'; });
+    var newIndex = currentIndex;
+    if (e.key === 'ArrowRight') newIndex = (currentIndex + 1) % tabs.length;
+    if (e.key === 'ArrowLeft') newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    if (e.key === 'Home') newIndex = 0;
+    if (e.key === 'End') newIndex = tabs.length - 1;
+    e.preventDefault();
+    tabs[newIndex].focus();
+    activateTab(tabs[newIndex].dataset.id);
+  });
+
+  continueBtn.addEventListener('click', function(){
+    var selected = getSelectedIds();
+    if (selected.length === 0){
+      selectWarning.classList.add('is-visible');
+      return;
+    }
+    selectWarning.classList.remove('is-visible');
+    buildTabs(selected);
+    stepSelect.classList.add('is-hidden');
+    stepFocus.classList.add('is-visible');
+    stepFocus.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  editTypesBtn.addEventListener('click', function(){
+    stepFocus.classList.remove('is-visible');
+    stepSelect.classList.remove('is-hidden');
+    stepSelect.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ---- review log ----
+  var logList = document.getElementById('log-list');
+  var logEntries = {};
+
+  function renderLog(){
+    var keys = Object.keys(logEntries);
+    logList.innerHTML = '';
+    if (keys.length === 0){
+      var li = document.createElement('li');
+      li.className = 'log-empty';
+      li.textContent = 'Nothing addressed yet — check an item above to add it here.';
+      logList.appendChild(li);
+      return;
+    }
+    keys.forEach(function(key){
+      var li = document.createElement('li');
+      var labelSpan = document.createElement('span');
+      labelSpan.textContent = logEntries[key].label;
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'log-time';
+      timeSpan.textContent = logEntries[key].time;
+      li.appendChild(labelSpan);
+      li.appendChild(timeSpan);
+      logList.appendChild(li);
+    });
+  }
+
+  panelsContainer.addEventListener('change', function(e){
+    if (e.target.matches('.log-check input[type="checkbox"]')){
+      var key = e.target.id;
+      if (e.target.checked){
+        logEntries[key] = {
+          label: e.target.dataset.logLabel,
+          time: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+        };
+      } else {
+        delete logEntries[key];
+      }
+      renderLog();
+    }
+  });
+
+  document.getElementById('copy-log-btn').addEventListener('click', function(){
+    var keys = Object.keys(logEntries);
+    var context = document.getElementById('log-context').value.trim();
+    var header = 'Accessibility review log — supports demonstrating good-faith effort. Not a substitute for your institution\'s official documentation process.\n';
+    header += context ? ('Working on: ' + context + '\n\n') : '\n';
+    header += 'Addressed:\n';
+    var body = keys.length
+      ? keys.map(function(k){ return '- ' + logEntries[k].label + ' (' + logEntries[k].time + ')'; }).join('\n')
+      : '- Nothing addressed yet.';
+    var text = header + body;
+
+    var confirm = document.getElementById('copy-confirm');
+    var outputWrap = document.getElementById('log-output-wrap');
+    var output = document.getElementById('log-output');
+
+    // Always populate and reveal the text area first, so the log is
+    // available to copy manually no matter what the Clipboard API does.
+    output.value = text;
+    outputWrap.classList.add('is-visible');
+    output.focus();
+    output.select();
+
+    function showConfirm(msg){
+      confirm.textContent = msg;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        showConfirm('Copied to clipboard. It\'s also shown below if you need it again.');
+      }).catch(function(){
+        showConfirm('Select-all is ready below — copy with Ctrl/Cmd+C.');
+      });
+    } else {
+      showConfirm('Select-all is ready below — copy with Ctrl/Cmd+C.');
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

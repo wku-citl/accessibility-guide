@@ -446,6 +446,13 @@
           action: "Use the Bullets or Numbering buttons on the Home tab instead of typing dashes, asterisks, or numbers by hand."
         },
         {
+          title: "Contrast in colored or highlighted headings",
+          tier: "do", tierLabel: "Core fix",
+          why: "Low-contrast text is hard to read for people with low vision, and that's true whether the color comes from the text itself or from a highlight behind it. A bright highlight can fail the same contrast check as colored text, even with plain black text on top. A colored or highlighted heading can look perfectly readable to you and still fall below the contrast threshold that matters for someone with low vision \u2014 readable by eye and passing contrast aren't the same test.",
+          checks: ["A contrast ratio is a fixed math calculation of the color values involved, not a judgment call. Word's checker and Ally can both catch this, and when it's flagged, it's accurate."],
+          action: "If you use colored text or highlighting to distinguish headings or sections, check it with Word's checker or Ally rather than judging it by eye. Fixing it is usually just picking a different color, darkening it, or choosing a lighter highlight."
+        },
+        {
           title: "Tables: real data vs. layout",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "A real data table needs a marked header row so a screen reader can announce which column a cell belongs to. A table used only to line up unrelated text visually turns into a screen reader navigating cell-by-cell through content that was never tabular.",
@@ -518,18 +525,18 @@
           action: "Mark purely visual, non-informational images as decorative so a screen reader skips them."
         },
         {
+          title: "Meaning carried by color alone",
+          tier: "do", tierLabel: "Core fix",
+          why: "A color-coded diagram with no legend or labels \u2014 red versus green, say \u2014 is invisible to colorblind students and to anyone using a screen reader.",
+          checks: ["No automated tool checks for this. It's not a flag you'll ever see on a score."],
+          action: "When you notice it, add a label, pattern, or icon alongside the color. Not something to comb every image for on a deadline, but worth keeping in mind for anything you build going forward."
+        },
+        {
           title: "Complex images: infographics, dense charts, multi-part diagrams",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "A single sentence of alt text can't carry everything in a data-dense infographic or a diagram with many labeled parts.",
           checks: ["No automated tool distinguishes a simple image from a complex one \u2014 it treats both the same way, which is exactly why this one is easy to under-serve without noticing."],
           action: "For anything genuinely dense, a short alt text plus a longer text description placed near the image usually works better than trying to fit everything into alt text alone. Worth talking through with CITL if you're not sure how much detail is enough."
-        },
-        {
-          title: "Meaning carried by color alone",
-          tier: "not", tierLabel: "Not expected of you",
-          why: "A color-coded diagram with no legend or labels \u2014 red versus green, say \u2014 is invisible to colorblind students and to anyone using a screen reader.",
-          checks: ["No automated tool checks for this. It's not a flag you'll ever see on a score."],
-          action: "When you notice it, add a label, pattern, or icon alongside the color. Not something to comb every image for on a deadline, but worth keeping in mind for anything you build going forward."
         }
       ]
     },

@@ -357,7 +357,7 @@
     {
       id: "ppt",
       label: "PowerPoint / Slides",
-      intro: "Six things worth checking in a typical deck, roughly in order of how often they come up.",
+      intro: "Six things worth checking in a typical deck.",
       goDeeper: "For step-by-step instructions, see CITL's <a href=\"https://www.wku.edu/citl/accessibility/accessibility.php\" target=\"_blank\" rel=\"noopener\">Creating Accessible Course Materials</a> page.",
       items: [
         {
@@ -398,6 +398,14 @@
           action: "Fix flagged contrast issues first. Separately, scan for anything relying on color alone and add a label, icon, or pattern alongside it."
         },
         {
+          title: "Embedded or linked video and audio",
+          tier: "do", tierLabel: "Core fix",
+          why: "Captions matter for students who are deaf or hard of hearing, and help anyone watching without headphones or in a noisy space.",
+          checks: ["Neither Ally nor PowerPoint's checker verifies caption accuracy, only whether captions exist. PowerPoint's checker often won't even see a video that's linked rather than embedded."],
+          action: "Review captions rather than assuming they're correct once they exist.",
+          wku: "If the recording is uploaded to Mediasite, WKU's third-party transcription service generates captions automatically &mdash; check them for accuracy rather than assuming. Zoom and YouTube auto-caption too, but auto-captions are a first draft: review and correct names, jargon, and specialized terms before trusting them."
+        },
+        {
           title: "Tables: real data vs. layout",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "A real data table needs a marked header row so a screen reader can announce \u201Ccolumn: Fall enrollment\u201D for each cell. A table used only to line up text visually turns into a screen reader navigating cell-by-cell through content that was never tabular.",
@@ -407,14 +415,6 @@
           ],
           action: "For real data, mark the header row (Table Design &gt; Header Row) &mdash; a quick fix. If a \u201Ctable\u201D is actually laying out unrelated text, that's worth a short conversation about restructuring rather than a five-minute patch."
         },
-        {
-          title: "Embedded or linked video and audio",
-          tier: "do", tierLabel: "Core fix",
-          why: "Captions matter for students who are deaf or hard of hearing, and help anyone watching without headphones or in a noisy space.",
-          checks: ["Neither Ally nor PowerPoint's checker verifies caption accuracy, only whether captions exist. PowerPoint's checker often won't even see a video that's linked rather than embedded."],
-          action: "Review captions rather than assuming they're correct once they exist.",
-          wku: "If the recording is uploaded to Mediasite, WKU's third-party transcription service generates captions automatically &mdash; check them for accuracy rather than assuming. Zoom and YouTube auto-caption too, but auto-captions are a first draft: review and correct names, jargon, and specialized terms before trusting them."
-        }
       ]
     },
     {

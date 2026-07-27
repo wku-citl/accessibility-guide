@@ -340,7 +340,7 @@
         <label for="log-output" class="log-output-label">Your log text — select all (Ctrl/Cmd+A) and copy (Ctrl/Cmd+C) if the button above didn't copy it automatically:</label>
         <textarea id="log-output" readonly rows="6"></textarea>
       </div>
-      <p class="doc-disclaimer">This log supports showing good-faith effort on your own materials. It isn't a substitute for any documentation process the Office of Institutional Equity puts in place.</p>
+      <p class="doc-disclaimer">This log supports showing good-faith effort on your own materials. It isn't a substitute for any future documentation process the Office of Institutional Equity puts in place.</p>
     </div>
   </section>
 
@@ -875,7 +875,7 @@
   document.getElementById('copy-log-btn').addEventListener('click', function(){
     var keys = Object.keys(logEntries);
     var context = document.getElementById('log-context').value.trim();
-    var header = 'Accessibility review log — supports demonstrating good-faith effort. Not a substitute for your institution\'s official documentation process.\n';
+    var header = 'Accessibility Review Log\n';
     header += context ? ('Working on: ' + context + '\n\n') : '\n';
     header += 'Addressed:\n';
     var body = keys.length

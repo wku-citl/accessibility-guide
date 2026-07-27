@@ -347,7 +347,7 @@
 </main>
 
 <footer>
-  <p>Questions, or something here that doesn't fit your situation? Reach CITL at <a href="mailto:citl@wku.edu">citl@wku.edu</a>. <br /> Please note: This tool doesn't determine whether a course meets compliance requirements on its own. It is merely meant to make the day-to-day technical work more manageable.</p>
+  <p>Questions, or something here that doesn't fit your situation? Reach out to CITL at <a href="mailto:citl@wku.edu">citl@wku.edu</a>. <br /> Please note: This tool doesn't determine whether a course meets compliance requirements on its own. It is merely meant to make the day-to-day technical work more manageable.</p>
 </footer>
 
 <script>
@@ -591,17 +591,17 @@
         },
         {
           title: "Link text that describes the destination",
-          tier: "ask", tierLabel: "Worth a CITL conversation",
-          why: "Screen reader users often pull up a list of every link on a page, out of context. Several links that all say \u201Cclick here\u201D become indistinguishable from each other on that list.",
+          tier: "do", tierLabel: "Core fix",
+          why: "Screen reader users often pull up a list of every link on a page, out of context. Several links that all say \u201Cclick here\u201D become indistinguishable from each other on that list. Displaying the full URL for a link is also generally unhelpful to a student using a screenreader.",
           checks: ["Whether link text describes its destination is a judgment call. It's not something an automated checker verifies reliably, so it's worth a personal scan regardless of what a score shows."],
-          action: "Name the destination in the link text. If a page has many links built up over several semesters, that's a reasonable thing to review with CITL rather than all at once."
+          action: "Name the destination in the link text so that a student hearing the text read in isolation understands where they are being directed."
         },
         {
           title: "Pasted-in HTML or code",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "Code pasted in from an old course, a template, or an outside tool can carry low-contrast styling or structure that doesn't match the rest of the page, without it being obvious just by looking.",
           checks: ["This is one of the harder things for any automated tool to evaluate in context \u2014 worth a second set of eyes."],
-          action: "If you're reusing pasted code from somewhere else, it's worth a quick CITL check rather than assuming it carried over cleanly."
+          action: "If you're reusing pasted code from somewhere else, it's worth a quick CITL check rather than assuming it carried over cleanly or is optimized for accessibility."
         }
       ]
     },

@@ -619,6 +619,20 @@
           action: "Use the built-in Math Editor in the question text field rather than typing symbols or pasting an image."
         },
         {
+          title: "Fill-in-the-blank questions",
+          tier: "do", tierLabel: "Core fix",
+          why: "A screen reader reads a blank space as a string of \u201Cblank blank blank,\u201D which is confusing without warning.",
+          checks: ["This isn't something a checker flags \u2014 it's a wording choice in your instructions, not a structural issue."],
+          action: "Say in the question instructions that it's a fill-in-the-blank question, so the format makes sense before a student hits the blank itself."
+        },
+        {
+          title: "Timed tests",
+          tier: "do", tierLabel: "Core fix",
+          why: "A student with an approved accommodation may need extended time on a timed assessment.",
+          checks: ["This isn't something any content checker evaluates. It's a process step tied to a specific student's approved accommodation, not a property of the test itself."],
+          action: "When the Student Accessibility Resource Center notifies you of an approved accommodation, apply the accommodation from the \u201CRoster\u201D page within your Blackboard course site."
+        },
+        {
           title: "Images that carry the answer",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "A question like \u201Cidentify the labeled structure\u201D depends on visually reading fine detail in an image. Alt text describing the image can accidentally give away the answer, or still not give an equivalent experience if it doesn't.",
@@ -633,25 +647,11 @@
           action: "Mark header rows where the table is genuine data. If restructuring a table used for answer layout, that's worth a short conversation."
         },
         {
-          title: "Fill-in-the-blank questions",
-          tier: "do", tierLabel: "Core fix",
-          why: "A screen reader reads a blank space as a string of \u201Cblank blank blank,\u201D which is confusing without warning.",
-          checks: ["This isn't something a checker flags \u2014 it's a wording choice in your instructions, not a structural issue."],
-          action: "Say in the question instructions that it's a fill-in-the-blank question, so the format makes sense before a student hits the blank itself."
-        },
-        {
           title: "Matching, ordering, or drag-based question types",
           tier: "ask", tierLabel: "Worth a CITL conversation",
           why: "Not every interaction pattern behaves the same way for a student navigating by keyboard instead of a mouse.",
           checks: ["Blackboard states that its own drag-and-drop interactions across the platform include keyboard alternatives. Whether that holds true for a specific question you've built is worth confirming yourself rather than assuming."],
           action: "Try completing the question using only Tab, Enter, and arrow keys \u2014 no mouse. If anything feels stuck or unclear, that's worth a CITL conversation before the test goes live."
-        },
-        {
-          title: "Timed tests",
-          tier: "do", tierLabel: "Core fix",
-          why: "A student with an approved accommodation may need extended time on a timed assessment.",
-          checks: ["This isn't something any content checker evaluates. It's a process step tied to a specific student's approved accommodation, not a property of the test itself."],
-          action: "When the Student Accessibility Resource Center notifies you of an approved accommodation, apply the accommodation from the \u201CRoster\u201D page within your Blackboard course site."
         }
       ]
     },
@@ -669,18 +669,18 @@
           action: "Name the destination in the link text \u2014 \u201Cthe course syllabus\u201D rather than \u201Cclick here.\u201D"
         },
         {
-          title: "Third-party tools and publisher platforms",
-          tier: "not", tierLabel: "Not expected of you",
-          why: "A tool's accessibility depends on how the vendor built it \u2014 nothing about how you use it inside Blackboard changes that.",
-          checks: ["No file-level checker evaluates an external tool at all. This lives outside what Ally or Word's checker can see."],
-          action: "This isn't something to personally fix after the fact. Where possible, it's worth checking a tool's accessibility documentation before adopting it, rather than after a student runs into a barrier."
-        },
-        {
           title: "Your own scanned reading vs. a library-hosted version",
           tier: "do", tierLabel: "Core fix",
           why: "A library database version of an article is usually already accessible and stays stable across course copies, while your own scan may not be either.",
           checks: ["Ally will still flag your own uploaded scan even if a clean, accessible library version exists elsewhere."],
           action: "Check whether the library already has the reading before uploading your own copy."
+        },
+        {
+          title: "Third-party tools and publisher platforms",
+          tier: "not", tierLabel: "Not expected of you",
+          why: "A tool's accessibility depends on how the vendor built it \u2014 nothing about how you use it inside Blackboard changes that.",
+          checks: ["No file-level checker evaluates an external tool at all. This lives outside what Ally or Word's checker can see."],
+          action: "This isn't something to personally fix after the fact. Where possible, it's worth checking a tool's accessibility documentation before adopting it, rather than after a student runs into a barrier."
         }
       ]
     }
